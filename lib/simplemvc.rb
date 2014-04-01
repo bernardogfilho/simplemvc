@@ -3,6 +3,8 @@ require "simplemvc/version"
 module Simplemvc
   class Application
     def call(env)
+      return [ 302, { "Location" => "/pages/about" }, [] ] if env["PATH_INFO"] == "/"
+      return [ 500, {}, []] if env["PATH_INFO"] == "/favicon.ico"
       # env["PATH_INFO"] = "/pages/about" => "PagesController.send(:about)"
       controller_class, action = get_controller_and_action(env)
       response = controller_class.new.send(action)
