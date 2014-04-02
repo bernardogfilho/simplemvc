@@ -10,9 +10,14 @@ module Simplemvc
       return [ 500, {}, []] if env["PATH_INFO"] == "/favicon.ico"
       # env["PATH_INFO"] = "/pages/about" => "PagesController.send(:about)"
       controller_class, action = get_controller_and_action(env)
-      response = controller_class.new(env).send(action)
+      controller = controller_class.new(env)
+      response = controller.send(action)
 
-      [ 200, { "Content-Type" => "text/html" }, [ response ] ]
+      if controller.get_response
+        controller.get_response
+      else
+        [ 200, { "Content-Type" => "text/html" }, [ response ] ]
+      end
     end
 
     def get_controller_and_action(env)
